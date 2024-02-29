@@ -1,0 +1,43 @@
+const { test, request } = require('@playwright/test');
+
+let accessToken = ''; // Define a variable to store the access token
+
+test('Fetch API Token', async ({ request }) => {
+  try {
+    const apiUrl = 'API/endpoint';
+    const customHeaders = {
+      'header': 'value',
+      'Authorization': 'Basic value',
+    };
+
+    const response = await request.get(apiUrl, { headers: customHeaders });
+    console.log('Status Code:', response.status());
+
+    const responseBody = JSON.parse(await response.text());
+    accessToken = responseBody.access_token; // Store the access token in the variable
+    console.log('Access Token:', accessToken);
+
+  } catch (error) {
+    console.error('Error fetching API token:', error);
+  }
+});
+
+test('Step2', async ({ request }) => {
+  try {
+    const apiUrl = 'API/endpoint';
+    const customHeaders = {
+      'X-IBM-Client-Id': 'value',
+      'Authorization': `Bearer ${accessToken}`,
+      //'Authorization': `Bearer value';
+	  };
+
+    const response = await request.get(apiUrl, { headers: customHeaders });
+    console.log('Status Code:', response.status());
+
+    const responseBody = JSON.parse(await response.text());
+    console.log('Response Body:', responseBody);
+
+  } catch (error) {
+    console.error('Error fetching API token:', error);
+  }
+});
